@@ -1,0 +1,16 @@
+__pycache__/
+envs/
+rail_venv
+static_server/
+type_conversion/
+.env
+.python-version
+config.py
+convert.py
+demo.py
+output.log
+pyproject.toml
+query_test.py
+uv.lock
+id_rsa
+id_rsa.pub
