@@ -48,12 +48,12 @@ class CoalJourneyDashboard:
             page_no = currentPage or 1
             page_len = 10 
 
-            if search_text:
-                pending_data, completed_data = self.search_text(pending_data, completed_data, search_text)
-
             pending_data = Q(avery_placement_date =None)
             completed_data = Q(avery_placement_date__ne =None)
 
+            if search_text:
+                pending_data, completed_data = self.search_text(pending_data, completed_data, search_text)
+                
             try:
                 if start_timestamp:
                     # start_date = helpers.convert_to_utc_format(start_timestamp, "%Y-%m-%dT%H:%M")
