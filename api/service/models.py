@@ -24,27 +24,27 @@ connect('GMR_DB', alias='GMR_DB-alias', host='mongodb://admin:%40ccessDenied321@
 ################################     Save Tare Request      #############################################
 
 class SeclRailData(EmbeddedDocument):
-    indexing = StringField()
+    indexing = IntField()
     wagon_owner = StringField()
     wagon_type = StringField()
-    wagon_no = StringField()
-    secl_cc_wt = StringField()
-    secl_gross_wt = StringField()
-    secl_tare_wt = StringField()
-    secl_net_wt = StringField()
-    secl_ol_wt = StringField()
-    secl_ul_wt = StringField()
-    secl_chargable_wt = StringField()
-    rly_cc_wt = StringField()
-    rly_gross_wt = StringField()
-    rly_tare_wt = StringField()
-    rly_net_wt = StringField()
-    rly_permissible_cc_wt = StringField()
-    rly_ol_wt = StringField()
-    rly_norm_rate = StringField()
-    rly_pun_rate = StringField()
-    rly_chargable_wt = StringField()
-    rly_sliding_adjustment = StringField()
+    wagon_no = IntField()
+    secl_cc_wt = FloatField()
+    secl_gross_wt = FloatField()
+    secl_tare_wt = FloatField()
+    secl_net_wt = FloatField()
+    secl_ol_wt = FloatField()
+    secl_ul_wt = FloatField()
+    secl_chargable_wt = FloatField()
+    rly_cc_wt = FloatField()
+    rly_gross_wt = FloatField()
+    rly_tare_wt = FloatField()
+    rly_net_wt = FloatField()
+    rly_permissible_cc_wt = FloatField()
+    rly_ol_wt = FloatField()
+    rly_norm_rate = FloatField()
+    rly_pun_rate = FloatField()
+    rly_chargable_wt = FloatField()
+    rly_sliding_adjustment = FloatField()
 
     def payload(self):
         return {
@@ -90,32 +90,32 @@ class SeclRailData(EmbeddedDocument):
         }
     
 class AveryRailData(EmbeddedDocument):
-    indexing = StringField()
+    indexing = IntField()
     wagon_owner = StringField()
     wagon_type = StringField()
-    wagon_no = StringField()
-    ser_no = StringField()
-    rake_no = StringField()
-    rake_id = StringField()
-    wagon_no_avery = StringField()
-    wagon_id = StringField()
-    wagon_type_avery = StringField()
+    wagon_no = IntField()
+    ser_no = IntField()
+    rake_no = IntField()
+    rake_id = IntField()
+    wagon_no_avery = IntField()
+    wagon_id = IntField()
+    wagon_type_avery = IntField()
     wagon_cc = StringField()
     mode = StringField()
-    tip_startdate = StringField()
-    tip_starttime = StringField()
-    tip_enddate = StringField()
+    tip_startdate = DateTimeField()
+    tip_starttime = DateTimeField()
+    tip_enddate = DateTimeField()
     tip_endtime = StringField()
     tipple_time = StringField()
-    status = StringField()
+    status = BooleanField()
     # wagon_gross_wt = StringField()
     # wagon_tare_wt = StringField()
     # wagon_net_wt = StringField()
-    gwel_gross_wt = StringField()
-    gwel_tare_wt = StringField()
-    gwel_net_wt = StringField()
+    gwel_gross_wt = FloatField()
+    gwel_tare_wt = FloatField()
+    gwel_net_wt = FloatField()
     time_in_tipp = StringField()
-    po_number = StringField()
+    po_number = IntField()
     coal_grade = StringField()
     data_from = StringField()
 
@@ -1169,7 +1169,7 @@ class Historian(Document):
                 "tagid": self.tagid,
                 "sum": self.sum
             }
-    
+ 
 
 class RailData(Document):
     rr_no = IntField()
@@ -1202,7 +1202,7 @@ class RailData(Document):
     total_freight = FloatField(null=True)
     sd = StringField(null=True)
     source_type = StringField(null=True)
-    month = DateTimeField(null=True)
+    month = StringField(null=True)
     rr_date = DateTimeField(null=True)
     siding = StringField(null=True)
     mine = StringField(null=True)
@@ -1589,7 +1589,7 @@ class sapRecordsRail(Document):
     po_open_quantity = StringField(null=True)
     uom = StringField(null=True)
     # sap data end
-
+    po_date = DateTimeField(null=True)
     meta = {"db_alias": "GMR_DB-alias", "collection": "sapRecordsRail"}
 
 
@@ -1724,8 +1724,8 @@ class sapRecordsRCR(Document):
 
 class rakeQuota(Document):
     ID = IntField(min_value=1)
-    month = DateTimeField(default=None)
-    year = StringField(default=None)
+    month = StringField(default=None)
+    year = IntField(default=None)
     valid_upto = DateTimeField(default=None)
     coal_field =  StringField(default=None)
     rake_alloted = IntField(default=None)
@@ -1763,8 +1763,8 @@ class rakeQuota(Document):
 
 class rcrrakeQuota(Document):
     ID = IntField(min_value=1)
-    month = DateTimeField(default=None)
-    year = StringField(default=None)
+    month = StringField(default=None)
+    year = IntField(default=None)
     valid_upto = DateTimeField(default=None)
     coal_field =  StringField(default=None)
     rake_alloted = IntField(default=None)
@@ -1834,7 +1834,7 @@ class RcrRoadData(Document):
     
     rcr_file = StringField(null=True) # added by faizal for App on 20052025 1247
     grn_status = BooleanField(default=False)
-    
+    mine_invoice=StringField(null=True) #NEW ADD   #added on 30-05-2025 on 05:38pm
     created_at = DateTimeField(default=datetime.datetime.now)
 
     meta = {"db_alias": "GMR_DB-alias", "collection": "RcrRoadData"}
@@ -1877,6 +1877,7 @@ class RcrRoadData(Document):
             "po_amount": self.po_amount,
             "rcr_file": self.rcr_file,
             "grn_status": self.grn_status,
+            "mine_invoice":self.mine_invoice, 
             "created_at": datetime.datetime.fromisoformat(
                     self.created_at.strftime("%Y-%m-%d %H:%M:%S.%fZ")[:-1] + "+00:00"
                     ).astimezone(tz=to_zone).strftime("%Y-%m-%d %H:%M:%S") if self.created_at else None,
@@ -1888,135 +1889,6 @@ class RcrRoadData(Document):
 
 
 
-class SeclRailData(EmbeddedDocument):
-    indexing = IntField()
-    wagon_owner = StringField()
-    wagon_type = StringField()
-    wagon_no = IntField()
-    secl_cc_wt = FloatField()
-    secl_gross_wt = FloatField()
-    secl_tare_wt = FloatField()
-    secl_net_wt = FloatField()
-    secl_ol_wt = FloatField()
-    secl_ul_wt = FloatField()
-    secl_chargable_wt = FloatField()
-    rly_cc_wt = FloatField()
-    rly_gross_wt = FloatField()
-    rly_tare_wt = FloatField()
-    rly_net_wt = FloatField()
-    rly_permissible_cc_wt = FloatField()
-    rly_ol_wt = FloatField()
-    rly_norm_rate = FloatField()
-    rly_pun_rate = FloatField()
-    rly_chargable_wt = FloatField()
-    rly_sliding_adjustment = StringField()
-
-    def payload(self):
-        return {
-            "indexing": self.indexing,
-            "wagon_owner": self.wagon_owner, 
-            "wagon_type": self.wagon_type,
-            "wagon_no": self.wagon_no,
-            "secl_cc_wt": self.secl_cc_wt,
-            "secl_gross_wt": self.secl_gross_wt,
-            "secl_tare_wt": self.secl_tare_wt,
-            "secl_net_wt": self.secl_net_wt,
-            "secl_ol_wt": self.secl_ol_wt,
-            "secl_ul_wt": self.secl_ul_wt,
-            "secl_chargable_wt": self.secl_chargable_wt,
-            "rly_cc_wt": self.rly_cc_wt,
-            "rly_gross_wt": self.rly_gross_wt,
-            "rly_tare_wt": self.rly_tare_wt,
-            "rly_net_wt": self.rly_net_wt,
-            "rly_permissible_cc_wt": self.rly_permissible_cc_wt,
-            "rly_ol_wt": self.rly_ol_wt,
-            "rly_norm_rate": self.rly_norm_rate,
-            "rly_pun_rate": self.rly_pun_rate,
-            "rly_chargable_wt": self.rly_chargable_wt,
-            "rly_sliding_adjustment": self.rly_sliding_adjustment,
-        }
-
-    def rlypayload(self):
-        return {
-            "indexing": self.indexing,
-            "wagon_owner": self.wagon_owner, 
-            "wagon_type": self.wagon_type,
-            "wagon_no": self.wagon_no,
-            "rly_cc_wt": self.rly_cc_wt,
-            "rly_gross_wt": self.rly_gross_wt,
-            "rly_tare_wt": self.rly_tare_wt,
-            "rly_net_wt": self.rly_net_wt,
-            "rly_permissible_cc_wt": self.rly_permissible_cc_wt,
-            "rly_ol_wt": self.rly_ol_wt,
-            "rly_norm_rate": self.rly_norm_rate,
-            "rly_pun_rate": self.rly_pun_rate,
-            "rly_chargable_wt": self.rly_chargable_wt,
-            "rly_sliding_adjustment": self.rly_sliding_adjustment,
-        }
-        
-
-class AveryRailData(EmbeddedDocument):
-    indexing = IntField()
-    wagon_owner = StringField()
-    wagon_type = StringField()
-    wagon_no = IntField()
-    ser_no = IntField()
-    rake_no = IntField()
-    rake_id = IntField()
-    wagon_no_avery = IntField()
-    wagon_id = IntField()
-    wagon_type_avery = StringField()
-    wagon_cc = StringField()
-    mode = StringField()
-    tip_startdate = DateTimeField()
-    tip_starttime = DateTimeField()
-    tip_enddate = DateTimeField()
-    tip_endtime = StringField()
-    tipple_time = StringField()
-    status = BooleanField()
-    # wagon_gross_wt = StringField()
-    # wagon_tare_wt = StringField()
-    # wagon_net_wt = StringField()
-    gwel_gross_wt = FloatField()
-    gwel_tare_wt = FloatField()
-    gwel_net_wt = FloatField()
-    time_in_tipp = StringField()
-    po_number = IntField()
-    coal_grade = StringField()
-    data_from = StringField()
-
-    def payload(self):
-        return {
-            "indexing": self.indexing,
-            "wagon_owner": self.wagon_owner,
-            "wagon_type": self.wagon_type,
-            "wagon_no": self.wagon_no,
-            "ser_no": self.ser_no,
-            "rake_no": self.rake_no,
-            "rake_id": self.rake_id,
-            "wagon_no_avery": self.wagon_no_avery,
-            "wagon_id": self.wagon_id,
-            "wagon_type": self.wagon_type,
-            "wagon_cc": self.wagon_cc,
-            "mode": self.mode,
-            "tip_startdate": self.tip_startdate,
-            "tip_starttime": self.tip_starttime,
-            "tip_enddate": self.tip_enddate,
-            "tip_endtime": self.tip_endtime,
-            "tipple_time": self.tipple_time,
-            "status": self.status,
-            "wagon_type_avery": self.wagon_type_avery,
-            # "wagon_gross_wt": self.wagon_gross_wt,
-            # "wagon_tare_wt": self.wagon_tare_wt,
-            # "wagon_net_wt": self.wagon_net_wt,
-            "gwel_gross_wt": self.gwel_gross_wt,
-            "gwel_tare_wt": self.gwel_tare_wt,
-            "gwel_net_wt": self.gwel_net_wt,
-            "time_in_tipp": self.time_in_tipp,
-            "po_number": self.po_number,
-            "coal_grade": self.coal_grade,
-            "data_from": self.data_from,
-        }
     
 class Grn(Document):
     do_no = StringField(null=True)

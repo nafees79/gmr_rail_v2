@@ -109,7 +109,7 @@ class RcrRoadAndRail:
             helpers.error_handler(e)
             raise e
 
-    def coal_journey_rcr_rail_pending(self, pageNo, perPage, search_text, start_timestamp, end_timestamp, month):
+    def coal_journey_rcr_rail_pending(self, pageNo, perPage, search_text, start_timestamp, end_timestamp):
         try:
             result = {        
                 "labels": [],
@@ -141,13 +141,14 @@ class RcrRoadAndRail:
                     end_date = helpers.convert_to_utc_format(end_timestamp, "%Y-%m-%dT%H:%M","Asia/Kolkata",False)
                     pending_data &= Q(placement_date__lte = end_date)
 
-                if month:
-                    start_date = f'{month}-01'
-                    startd_date=datetime.datetime.strptime(f"{start_date}T00:00","%Y-%m-%dT%H:%M")
-                    end_date = (datetime.datetime.strptime(start_date, "%Y-%m-%d") + relativedelta(day=31)).strftime("%Y-%m-%d")
-                    # endd_date= f"{end_date}T23:59"
-                    pending_data &= Q(placement_date__gte = startd_date.strftime("%Y-%m-%dT%H:%M"))
-                    pending_data &= Q(placement_date__lte = f"{end_date}T23:59")
+                #Changes 2025-06-18 
+                # if month:
+                #     start_date = f'{month}-01'
+                #     startd_date=datetime.datetime.strptime(f"{start_date}T00:00","%Y-%m-%dT%H:%M")
+                #     end_date = (datetime.datetime.strptime(start_date, "%Y-%m-%d") + relativedelta(day=31)).strftime("%Y-%m-%d")
+                #     # endd_date= f"{end_date}T23:59"
+                #     pending_data &= Q(placement_date__gte = startd_date.strftime("%Y-%m-%dT%H:%M"))
+                #     pending_data &= Q(placement_date__lte = f"{end_date}T23:59")
             except Exception:
                 raise HTTPException(status_code=400, detail="Invalid date format")
             
@@ -171,7 +172,7 @@ class RcrRoadAndRail:
             raise e
 
 
-    def coal_journey_rcr_rail_completed(self, currentPage, perPage, search_text, start_timestamp, end_timestamp, month):
+    def coal_journey_rcr_rail_completed(self, currentPage, perPage, search_text, start_timestamp, end_timestamp):
         try:
             result = {        
                 "labels": [],
@@ -203,12 +204,13 @@ class RcrRoadAndRail:
                     # end_date = helpers.convert_to_utc_format(end_timestamp, "%Y-%m-%dT%H:%M","Asia/Kolkata",False)
                     completed_data &= Q(avery_placement_date__lte = end_timestamp)
 
-                if month:
-                    start_date = f'{month}-01'
-                    startd_date=datetime.datetime.strptime(f"{start_date}T00:00","%Y-%m-%dT%H:%M")
-                    end_date = (datetime.datetime.strptime(start_date, "%Y-%m-%d") + relativedelta(day=31)).strftime("%Y-%m-%d")
-                    completed_data &= Q(avery_placement_date__gte = startd_date.strftime("%Y-%m-%dT%H:%M"))
-                    completed_data &= Q(avery_placement_date__lte = f"{end_date}T23:59")
+                #Changes : 225-06-18
+                # if month:
+                #     start_date = f'{month}-01'
+                #     startd_date=datetime.datetime.strptime(f"{start_date}T00:00","%Y-%m-%dT%H:%M")
+                #     end_date = (datetime.datetime.strptime(start_date, "%Y-%m-%d") + relativedelta(day=31)).strftime("%Y-%m-%d")
+                #     completed_data &= Q(avery_placement_date__gte = startd_date.strftime("%Y-%m-%dT%H:%M"))
+                #     completed_data &= Q(avery_placement_date__lte = f"{end_date}T23:59")
             except Exception:
                 raise HTTPException(status_code=400, detail="Invalid date format")
             

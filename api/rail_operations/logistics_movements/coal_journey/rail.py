@@ -450,7 +450,7 @@ class CoalJourneyDashboard:
         except Exception as e:
             helpers.error_handler(e)
     
-    def coal_journey_rail_insert(self, payload, id=None):
+    def coal_journey_rail_insert(self, payload, id):
         try:
             final_data = payload.dict()
             try:
@@ -460,7 +460,7 @@ class CoalJourneyDashboard:
                     fetchRailData = RailData.objects.get(rr_no=final_data.get("rr_no"))
                 try:
                     fetchSaprecordsRail = sapRecordsRail.objects.get(rr_no=final_data.get("rr_no"))
-                except Exception as e:
+                except DoesNotExist as e:
                     fetchSaprecordsRail = None
                 avery_rail_data = fetchRailData.avery_rly_data
                 if fetchSaprecordsRail:
@@ -518,7 +518,22 @@ class CoalJourneyDashboard:
                     if key != 'secl_rly_data' and hasattr(fetchRailData, key):
                         setattr(fetchRailData, key, value)
 
+                
+                # for new_data in final_data.get('secl_rly_data', []):
+                #     updated = False
+                #     wagon_no = new_data.get('wagon_no')
+                #     if wagon_no is None:
+                #         # Log, skip, or raise custom error if this field is essential
+                #         continue  # or log a warning
 
+                #     for secl_data in fetchRailData.secl_rly_data:
+                #         if secl_data.wagon_no == wagon_no:
+                #             for key, value in new_data.items():
+                #                 setattr(secl_data, key, value)
+                #             updated = True
+                #             break  # break here to avoid unnecessary iterations
+                #     if not updated:
+                #         fetchRailData.secl_rly_data.append(SeclRailData(**new_data))
                 for new_data in final_data.get('secl_rly_data', []):
                     updated = False
                     for secl_data in fetchRailData.secl_rly_data:
@@ -527,8 +542,10 @@ class CoalJourneyDashboard:
                                 setattr(secl_data, key, value)
                             updated = True
                             break
+                
                     if not updated:
                         fetchRailData.secl_rly_data.append(SeclRailData(**new_data))
+            
                 
                 if not avery_rail_data:
                     listAveryData = []
@@ -547,7 +564,7 @@ class CoalJourneyDashboard:
 
                 return {"detail": "success"}
             
-            except Exception as e:
+            except DoesNotExist as e:
                 final_data = payload.dict()
                 secl_list_data = []
                 for single_data in final_data.get("secl_rly_data"):
@@ -588,7 +605,7 @@ class CoalJourneyDashboard:
                     avery_list_data.append(avery_rly_dict_data)
                 try:
                     fetchSaprecordsRail = sapRecordsRail.objects.get(rr_no=final_data.get("rr_no"))
-                except Exception as e:
+                except DoesNotExist as e:
                     fetchSaprecordsRail = None
                 # console_logger.debug(final_data.get("sd"))
                 console_logger.debug(final_data.get("total_secl_gross_wt"))
@@ -598,7 +615,7 @@ class CoalJourneyDashboard:
                 rail_data = RailData(
                     rr_no=final_data.get("rr_no"),
                     # rr_qty=final_data.get("rr_qty"),
-                    rr_qty=fetchSaprecordsRail.rr_qty if fetchSaprecordsRail and fetchSaprecordsRail.rr_qty else "",
+                    rr_qty=fetchSaprecordsRail.rr_qty if fetchSaprecordsRail and fetchSaprecordsRail.rr_qty else 0,
                     po_no=final_data.get("po_no"),
                     po_date=final_data.get("po_date"),
                     line_item=final_data.get("line_item"),
@@ -629,12 +646,12 @@ class CoalJourneyDashboard:
                     # month=datetime.datetime.strptime(fetchSaprecordsRail.month, '%b %d, %Y').strftime('%Y-%m-%d') if fetchSaprecordsRail and fetchSaprecordsRail.month else "",
                     secl_rly_data=secl_list_data,
                     avery_rly_data=avery_list_data,
-                    rr_date=fetchSaprecordsRail.rr_date if fetchSaprecordsRail and fetchSaprecordsRail.rr_date else "",
+                    rr_date=fetchSaprecordsRail.rr_date if fetchSaprecordsRail and fetchSaprecordsRail.rr_date else None,
                     siding=fetchSaprecordsRail.siding if fetchSaprecordsRail and fetchSaprecordsRail.siding else "",
                     mine=fetchSaprecordsRail.mine if fetchSaprecordsRail and fetchSaprecordsRail.mine else "",
                     grade=fetchSaprecordsRail.grade if fetchSaprecordsRail and fetchSaprecordsRail.grade else "",
                     # rr_qty=fetchSaprecordsRail.get("rr_qty") if fetchSaprecordsRail.get("rr_qty") else "",
-                    po_amount=fetchSaprecordsRail.po_amount if fetchSaprecordsRail and fetchSaprecordsRail.po_amount else "",
+                    po_amount=fetchSaprecordsRail.po_amount if fetchSaprecordsRail and fetchSaprecordsRail.po_amount else 0,
                 ) 
                 existing_rake_nos = [data.rake_no for data in RailData.objects()]
                 if final_data.get("placement_date") and fetchSaprecordsRail and fetchSaprecordsRail.month:

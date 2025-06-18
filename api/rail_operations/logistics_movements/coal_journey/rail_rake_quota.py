@@ -157,7 +157,7 @@ class CoalJourneyRailRake:
 
             # Pagination AFTER filtering
             pending_paginated_data = pending_filtered_data[offset:offset + page_size]
-            completed_paginated_data = list_data[offset:offset + page_size]
+            # completed_paginated_data = list_data[offset:offset + page_size]
 
             # Totals
             totals = defaultdict(int)
@@ -349,9 +349,11 @@ class CoalJourneyRailRake:
         try:
             payload = data.dict()
             try:
-                fetchrakeQuota = rakeQuota.objects(month=datetime.datetime.strptime(payload.get("month"), "%b-%Y").strftime("%d-%m-%Y"), source_type=payload.get("source_type"))
+                fetchrakeQuota = rakeQuota.objects(month=payload.get("month"), source_type=payload.get("source_type"))
             except Exception:
                 raise HTTPException(status_code=500, detail="Error processing rakeQuota")
+            if not fetchrakeQuota:
+                return {"detail": "Invalid month or source type"}
             if fetchrakeQuota:
                 fetchrakeQuota.update(rake_alloted=str(payload.get("rakes_planned_for_month")), expected_rakes=payload.get("expected_rakes") if payload.get("expected_rakes") != "" else None, source_type=payload.get("source_type") if payload.get("source_type") != "" else None, cancelled_rakes=payload.get("cancelled_rakes") if payload.get("cancelled_rakes") != "" else None, remarks=payload.get("remarks") if payload.get("remarks") != "" else None)
             

@@ -365,10 +365,11 @@ class RcrRakeQuota:
         try:
             payload = data.dict()
             try:
-                fetchrakeQuota = rcrrakeQuota.objects(month=datetime.datetime.strptime(payload.get("month"), "%b-%Y").strftime("%m-%Y"), source_type=payload.get("source_type"))
+                fetchrakeQuota = rcrrakeQuota.objects(month=payload.get("month"), source_type=payload.get("source_type"))
             except Exception:
                 raise HTTPException(status_code=500, detail="Error processing rcrrakeQuota")
-            
+            if not fetchrakeQuota:
+                return {"detail": "Invalid month or source type"}
             if fetchrakeQuota:
                 fetchrakeQuota.update(rake_alloted=str(payload.get("rakes_planned_for_month")), expected_rakes=payload.get("expected_rakes"), source_type=payload.get("source_type"), cancelled_rakes=payload.get("cancelled_rakes"), remarks=payload.get("remarks"))
             

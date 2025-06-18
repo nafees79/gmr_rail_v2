@@ -182,7 +182,7 @@ def endpoint_for_coal_journey_rail_rake_quota_pending(
         - **Set of data with counts.**
         """
         
-        return coal_journey_rail_rake_quota.coal_journey_rail_rake_quota_pending(currentPage, perPage, start_timestamp, end_timestamp)
+        return coal_journey_rail_rake_quota.coal_journey_rail_rake_quota_pending(currentPage,perPage,start_timestamp,end_timestamp)
   
 
 # Logistic Movements -> Coal Journey -> Rail -> Rake Quota Table -> Completed
@@ -288,7 +288,7 @@ def endpoint_for_coal_journey_rcr_rail_pending(
                                         search_text: Optional[str] = Query(None , description="RR No. / Mine"), 
                                         start_timestamp: Optional[str] = Query(None,description="YYYY-MM-DDT00:00"), 
                                         end_timestamp: Optional[str] = Query(None,description="YYYY-MM-DDT00:00"), 
-                                        month: Optional[str] = Query(None,description="YYYY-MM"),
+                                        # month: Optional[str] = Query(None,description="YYYY-MM"),
                                 ):
         
         """
@@ -307,14 +307,14 @@ def endpoint_for_coal_journey_rcr_rail_pending(
         
         - **end_timestamp**  : End datetime of Placement Date Eg: `2025-02-01T23:59`.
 
-        # - **month** :  Month of Placement Date Eg: `2025-02`.
+        - **month** :  Month of Placement Date Eg: `2025-02`.
         
         ---
         ### 📦 Returns:
         - **Set of data with counts**
         """
         
-        return coal_journey_rcr_all.coal_journey_rcr_rail_pending(currentPage, perPage, search_text, start_timestamp, end_timestamp, month)
+        return coal_journey_rcr_all.coal_journey_rcr_rail_pending(currentPage, perPage, search_text, start_timestamp, end_timestamp)
 
 
 #Logistic Movements -> Coal Journey -> RCR -> GWEL RCR Rail Journey Table Completed
@@ -326,7 +326,7 @@ def endpoint_for_coal_journey_rcr_rail_completed(
                                         search_text: Optional[str] = Query(None , description="RR No. / PO No. / Source"),
                                         start_timestamp: Optional[str] = Query(None,description="YYYY-MM-DDT00:00"),
                                         end_timestamp: Optional[str] = Query(None,description="YYYY-MM-DDT23:59"),
-                                        month: Optional[str] = Query(None,description="YYYY-MM"),
+                                        # month: Optional[str] = Query(None,description="YYYY-MM"),
                                 ):
         """
         **Fetches Coal Journey RCR data from RcrData and sapRecordsRCR Collection.**
@@ -350,7 +350,7 @@ def endpoint_for_coal_journey_rcr_rail_completed(
         ### 📦 Returns:
         - **Set of data with counts**
         """
-        return coal_journey_rcr_all.coal_journey_rcr_rail_completed(currentPage, perPage, search_text, start_timestamp, end_timestamp, month)
+        return coal_journey_rcr_all.coal_journey_rcr_rail_completed(currentPage, perPage, search_text, start_timestamp, end_timestamp)
 
 
 # Logistic Movements -> Coal Journey -> RCR -> Rail Journey Table Form Pending and Completed
